@@ -9,18 +9,10 @@ function getShoppingCart(ids, productsList) {
 		discount: ''
 	}
 
-	let productFiltered = []
 	
-	ids.map( id => {
-		product = productsList.filter(product => product.id === id) 
-		product.map(product => {
-			finalList.products.push({name: product.name, category: product.category})
-		})
-		productFiltered.push(product)
+	let productFiltered = filterProductByID(ids, productsList, finalList)
 
-	})
-
-	finalList.promotion = filterbyCategory(finalList.products)
+	finalList.promotion = filterByCategory(finalList.products)
 
 	finalList.totalPrice = `${sumPriceByPromotion(finalList.promotion, productFiltered).toFixed(2)}`
 
@@ -31,9 +23,22 @@ function getShoppingCart(ids, productsList) {
 	return finalList
 }
 
+function filterProductByID(ids, productsList, finalList) {
+	let productFiltered = []
+	ids.map( id => {
+		product = productsList.filter(product => product.id === id) 
+		product.map(product => {
+			finalList.products.push({name: product.name, category: product.category})
+		})
+		productFiltered.push(product)
+
+	})
+
+	return productFiltered
+}
 
 
-function filterbyCategory(productList) {
+function filterByCategory(productList) {
 	let unique = [...new Set(productList.map(a => a.category))];
 	return promotions[unique.length - 1]
 }
@@ -72,4 +77,4 @@ function calculatePercentageDiscount(discount, totalPrice) {
 	return (parseFloat(discount)*100) / (parseFloat(discount) + parseFloat(totalPrice))
 }
 
-module.exports = { getShoppingCart };
+module.exports = { getShoppingCart }
